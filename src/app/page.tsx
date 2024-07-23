@@ -7,6 +7,7 @@ export default async function HomePage() {
   const images = await db.query.image.findMany({
     orderBy:(model, {desc}) => desc(model.id),
   });
+  
   return (
     <main className="">
       <div className="flex flex-wrap gap-4">
