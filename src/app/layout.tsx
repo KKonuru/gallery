@@ -2,6 +2,7 @@ import "~/styles/globals.css";
 import {ClerkProvider} from '@clerk/nextjs';
 import { Inter } from "next/font/google";
 import "@uploadthing/react/styles.css";
+import { Toaster } from "sonner";
 
 import {TopNav} from './_components/topnav';
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
@@ -40,6 +41,7 @@ export default function RootLayout({
         <main className="overflow y-scroll">{children}</main>
         {modal}
         <div id="modal-root" />
+        <Toaster />
         </div>
         </body>
     </html>
