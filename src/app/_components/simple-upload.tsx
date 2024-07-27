@@ -45,7 +45,7 @@ export function SimpleUploadButton(){
     const router= useRouter();
     const {inputProps} = useUploadThingInputProps("imageUploader",{
       onUploadBegin(){
-        toast(<div className="flex items-center gap-2 text-white"><LoadingSpinner></LoadingSpinner> <span className="text-lg">Uploading...</span></div>,{
+        toast(<div className="flex items-center text-black"><LoadingSpinner></LoadingSpinner> <span className="text-lg">Uploading...</span></div>,{
           duration: 100000,
           id: "upload-begin"
         });
@@ -53,7 +53,11 @@ export function SimpleUploadButton(){
         onClientUploadComplete(){
           toast.dismiss("upload-begin");
           toast("Upload complete!");
-            router.refresh();
+          router.refresh();
+        },
+        onUploadError(error){
+          toast.dismiss("upload-begin");
+          toast.error("Upload failed");
         }
     });
     return (
