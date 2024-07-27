@@ -3,7 +3,7 @@ import {ClerkProvider} from '@clerk/nextjs';
 import { Inter } from "next/font/google";
 import "@uploadthing/react/styles.css";
 import { Toaster } from "sonner";
-
+import { CSPostHogProvider } from './_analytics/provider';
 import {TopNav} from './_components/topnav';
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
@@ -30,6 +30,8 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
+      <CSPostHogProvider>
+
     <html lang="en">
     <NextSSRPlugin
       
@@ -45,6 +47,7 @@ export default function RootLayout({
         </div>
         </body>
     </html>
+    </CSPostHogProvider>
     </ClerkProvider>
   );
 }
