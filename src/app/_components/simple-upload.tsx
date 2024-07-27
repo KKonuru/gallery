@@ -34,12 +34,18 @@ const useUploadThingInputProps = (...args: Input) => {
     isUploading: $ut.isUploading,
   };
 };
-
+function LoadingSpinner(){
+  return(
+     <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="white">
+      <path d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z" className="spinner_aj0A"/>
+    </svg>
+  );
+}
 export function SimpleUploadButton(){
     const router= useRouter();
     const {inputProps} = useUploadThingInputProps("imageUploader",{
       onUploadBegin(){
-        toast("Uploading image...",{
+        toast(<div className="flex items-center gap-2 text-white"><LoadingSpinner></LoadingSpinner> <span className="text-lg">Uploading...</span></div>,{
           duration: 100000,
           id: "upload-begin"
         });
