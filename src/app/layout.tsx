@@ -34,7 +34,7 @@ export default function RootLayout({
       
           routerConfig={extractRouterConfig(ourFileRouter)}
         />
-      <body className={`font-sans ${inter.variable} `}>
+      <body className={`font-sans ${inter.variable} dark`}>
       <TopNav/>
         <div className="h-screen grid gird-rows-[auto,1fr]">
         <main className="overflow y-scroll">{children}</main>
