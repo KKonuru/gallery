@@ -1,6 +1,6 @@
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { url } from "inspector";
 import { db } from "~/server/db";
 import { image } from "~/server/db/schema";
@@ -16,9 +16,14 @@ export const ourFileRouter = {
     .middleware(async ({ req }) => {
       // This code runs on your server before upload
       const user = auth();
- 
+      
       // If you throw, the user will not be able to upload
       if (!user.userId) throw new UploadThingError("Unauthorized");
+      const fullUserData = await clerkClient.users.getUser(user.userId);
+
+      if (fullUserData?.privateMetadata?.["can-upload"] !== true) {
+        throw new UploadThingError("User does not have permissions to upload");
+      }
       const { success } = await ratelimit.limit(user.userId);
       if (!success) throw new UploadThingError("Rate limited");
       // Whatever is returned here is accessible in onUploadComplete as `metadata`
