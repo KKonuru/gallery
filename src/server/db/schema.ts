@@ -1,7 +1,9 @@
 import { relations, sql } from "drizzle-orm";
 import {
+  boolean,
   index,
   integer,
+  pgSchema,
   pgTableCreator,
   primaryKey,
   serial,
@@ -17,8 +19,8 @@ import { type AdapterAccount } from "next-auth/adapters";
  *
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
-export const createTable = pgTableCreator((name) => `t3gallery_${name}`);
 
+export const createTable = pgTableCreator((name)=>`t3gallery_${name}`);
 export const image = createTable(
   "image",
   {
@@ -30,8 +32,10 @@ export const image = createTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt"),
+    public: boolean("public").notNull().default(false),
   },
   (example) => ({
     nameIndex: index("name_idx").on(example.name),
   })
 );
+
