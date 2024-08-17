@@ -6,7 +6,14 @@ import { toast } from "sonner"
 import {Popover,
   PopoverContent,
   PopoverTrigger} from "../../components/ui/popover";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../components/ui/select";
+  
 
 // inferred input off useUploadThing
 type Input = Parameters<typeof useUploadThing>;
@@ -70,6 +77,8 @@ export function SimpleUploadButton(){
       <Popover>
         <PopoverTrigger><UploadSVG /></PopoverTrigger>
         <PopoverContent>
+        
+          <br></br>
           <label htmlFor="upload-button"> Upload File</label>
           <input id="upload-button" type="file" className="sr-only" {...inputProps}/>
           </PopoverContent>
