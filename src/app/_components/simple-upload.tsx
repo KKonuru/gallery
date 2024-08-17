@@ -3,6 +3,10 @@
 import { useRouter } from "next/navigation";
 import { useUploadThing } from "~/utils/uploadthing";
 import { toast } from "sonner"
+import {Popover,
+  PopoverContent,
+  PopoverTrigger} from "../../components/ui/popover";
+
 
 // inferred input off useUploadThing
 type Input = Parameters<typeof useUploadThing>;
@@ -45,7 +49,8 @@ export function SimpleUploadButton(){
     const router= useRouter();
     const {inputProps} = useUploadThingInputProps("imageUploader",{
       onUploadBegin(){
-        toast(<div className="flex items-center text-black"><LoadingSpinner></LoadingSpinner> <span className="text-lg">Uploading...</span></div>,{
+        toast(
+        <div className="flex items-center text-black"><LoadingSpinner></LoadingSpinner> <span className="text-lg">Uploading...</span></div>,{
           duration: 100000,
           id: "upload-begin"
         });
@@ -62,8 +67,13 @@ export function SimpleUploadButton(){
     });
     return (
     <div>
-        <label htmlFor="upload-button"> <UploadSVG /></label>
-        <input id="upload-button" type="file" className="sr-only" {...inputProps}/>
+      <Popover>
+        <PopoverTrigger><UploadSVG /></PopoverTrigger>
+        <PopoverContent>
+          <label htmlFor="upload-button"> Upload File</label>
+          <input id="upload-button" type="file" className="sr-only" {...inputProps}/>
+          </PopoverContent>
+      </Popover>
     </div>
     );
 }

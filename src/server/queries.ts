@@ -4,6 +4,7 @@ import {auth} from "@clerk/nextjs/server";
 import { and, eq } from "drizzle-orm";
 import {image} from "./db/schema";
 import { redirect } from "next/navigation";
+import { album } from "./db/schema";
 export async function getMyImages(){
     const user = auth();
 
@@ -38,4 +39,30 @@ export async function deleteImage(id: number){
     await db.delete(image).where(and(eq(image.id,id),eq(image.userId,user.userId)));
     redirect("/");
 
+}
+
+export async function getUserAlbums(){
+    const user = auth();
+    if (!user.userId) throw new Error("Unauthorized");
+    const albums = await db.query.album.findMany({
+        where: (model, {eq}) => eq(model.userId, user.userId),
+        orderBy: (model, {desc}) => desc(model.createdAt),
+    });
+    return albums;
+}
+
+export async function createUserAlbum( name: string, publicDisplay: boolean){
+    const user = auth();
+    if (!user.userId) throw new Error("Unauthorized");
+    //Check if album already exists
+    const existingAlbum = await db.query.album.findFirst({
+        where: (model, {and,eq}) => and(eq(model.albumname,name),eq(model.userId,user.userId)),
+    });
+    if (existingAlbum) return false;
+    await db.insert(album).values({
+        albumname: name,
+        public: publicDisplay,
+        userId: user.userId,
+    });
+    return true;
 }

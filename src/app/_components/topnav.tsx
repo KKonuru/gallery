@@ -5,6 +5,7 @@ import { SignIn, SignInButton, SignOutButton, SignedIn, SignedOut, UserButton } 
 import { UploadButton } from "~/utils/uploadthing";
 import {SimpleUploadButton} from "./simple-upload";
 import {useRouter}  from "next/navigation";
+import { AddAlbum } from "./addalbum";
 export function TopNav(){
   const router = useRouter();
     return (
@@ -15,6 +16,7 @@ export function TopNav(){
                 <SignInButton />
             </SignedOut>
             <SignedIn>
+              <AddAlbum />
                 <SimpleUploadButton />
                 <UserButton />
             </SignedIn>

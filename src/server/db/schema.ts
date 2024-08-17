@@ -39,3 +39,18 @@ export const image = createTable(
   })
 );
 
+export const album = createTable(
+  "album",
+  {
+    id: serial("id").primaryKey(),
+    albumname: varchar("albumname", { length: 256 }).notNull(),
+    userId: varchar("userId", { length: 256 }).notNull(),
+    public: boolean("public").notNull().default(false),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+  },  
+  (example) => ({
+    nameIndex: index("albumname_idx").on(example.albumname),
+  })
+);

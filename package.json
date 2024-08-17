@@ -14,7 +14,12 @@
   "dependencies": {
     "@auth/drizzle-adapter": "^0.7.0",
     "@clerk/nextjs": "^5.0.0-beta.38",
+    "@hookform/resolvers": "^3.9.0",
+    "@radix-ui/react-hover-card": "^1.1.1",
+    "@radix-ui/react-label": "^2.1.0",
+    "@radix-ui/react-popover": "^1.1.1",
     "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-switch": "^1.1.0",
     "@radix-ui/react-toast": "^1.2.1",
     "@sentry/nextjs": "^8.19.0",
     "@t3-oss/env-nextjs": "^0.10.1",
@@ -31,12 +36,13 @@
     "posthog-js": "^1.150.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hook-form": "^7.52.2",
     "server-only": "^0.0.1",
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
     "uploadthing": "^6.13.2",
-    "zod": "^3.23.3"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/eslint": "^8.56.2",
