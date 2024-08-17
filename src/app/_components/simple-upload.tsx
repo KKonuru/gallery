@@ -13,7 +13,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../components/ui/select";
+import { useState,useEffect } from "react";
+import { string } from "zod";
   
+async function addAlbum(name:string,url:string){
+  
+  await fetch("/api/updateImageAlbum",{
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({name,url}),
+  });
+}
 
 // inferred input off useUploadThing
 type Input = Parameters<typeof useUploadThing>;
@@ -54,6 +66,23 @@ function LoadingSpinner(){
 }
 export function SimpleUploadButton(){
     const router= useRouter();
+    const [albums,setAlbums]= useState([]);
+    const [imageAlbum,setImageAlbum] = useState("miscellaneous");
+    useEffect(()=>{
+      async function getAlbums(){
+        const response = await fetch("/api/getUserAlbums",{
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await response.json();
+        console.log(data);
+        setAlbums(data.albums);
+      };
+      getAlbums();
+    },[]);
+
     const {inputProps} = useUploadThingInputProps("imageUploader",{
       onUploadBegin(){
         toast(
@@ -62,7 +91,12 @@ export function SimpleUploadButton(){
           id: "upload-begin"
         });
       },
-        onClientUploadComplete(){
+        onClientUploadComplete(response){
+          console.log("client upload complete", response);
+          if(response[0]){
+            let url = response[0]["serverData"]["url"];
+            addAlbum(imageAlbum,url);
+          }
           toast.dismiss("upload-begin");
           toast("Upload complete!");
           router.refresh();
@@ -77,8 +111,20 @@ export function SimpleUploadButton(){
       <Popover>
         <PopoverTrigger><UploadSVG /></PopoverTrigger>
         <PopoverContent>
-        
-          <br></br>
+        <Select onValueChange={(value)=>setImageAlbum(value)}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Album" />
+          </SelectTrigger>
+          <SelectContent>
+            {albums.map((album:string,index:number) =>
+               (<SelectItem key={index} value={album}>
+                {album}
+                </SelectItem>))
+              }
+            <SelectItem value="miscellaneous">miscellaneous</SelectItem>
+          </SelectContent>
+        </Select>
+          <br/>
           <label htmlFor="upload-button"> Upload File</label>
           <input id="upload-button" type="file" className="sr-only" {...inputProps}/>
           </PopoverContent>
