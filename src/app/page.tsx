@@ -109,6 +109,7 @@ export default async function HomePage() {
     <main className="">
       <SignedOut>
         <div className="h-full w-full text-2xl text-center">Please Sign In</div>
+        <UserImages/>
       </SignedOut>
       <SignedIn>
         <Tabs defaultValue="your-images" className="p-5">
