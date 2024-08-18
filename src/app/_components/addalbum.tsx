@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { Popover, PopoverContent, PopoverTrigger } from "../../components/ui/popover";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "../../components/ui/hover-card";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -44,7 +45,7 @@ function LoadingSpinner(){
   }
 export function AddAlbum() {
     
-
+    const router= useRouter();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -54,6 +55,7 @@ export function AddAlbum() {
     });
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
+       
         toast(
             <div className="flex items-center text-black"><LoadingSpinner></LoadingSpinner> <span className="text-lg">Creating Album...</span></div>,{
               duration: 100000,
@@ -65,13 +67,14 @@ export function AddAlbum() {
         if (res) {
             toast(
                 <div className="flex items-center text-black"><span className="text-lg">Album created</span></div>,{
-                  duration: 100000,
+                  duration: 500,
                   id: "upload-begin"
                 });
+                router.refresh();
         } else {
             toast(
                 <div className="flex items-center text-black"><span className="text-lg">Failed to create album</span></div>,{
-                  duration: 100000,
+                  duration: 500,
                   id: "upload-begin"
                 });
         }

@@ -99,10 +99,12 @@ export function SimpleUploadButton(){
           }
           toast.dismiss("upload-begin");
           toast("Upload complete!");
+          setImageAlbum("miscellaneous");
           router.refresh();
         },
         onUploadError(error){
           toast.dismiss("upload-begin");
+          setImageAlbum("miscellaneous");
           toast.error("Upload failed");
         }
     });
