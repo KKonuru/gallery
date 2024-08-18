@@ -66,7 +66,7 @@ function LoadingSpinner(){
 }
 export function SimpleUploadButton(){
     const router= useRouter();
-    const [albums,setAlbums]= useState([]);
+    const [albums,setAlbums]= useState<string[]>([]);
     const [imageAlbum,setImageAlbum] = useState("miscellaneous");
     useEffect(()=>{
       async function getAlbums(){
@@ -121,7 +121,7 @@ export function SimpleUploadButton(){
                 {album}
                 </SelectItem>))
               }
-            <SelectItem value="miscellaneous">miscellaneous</SelectItem>
+            {albums.includes("miscellaneous")==false ? <SelectItem value="miscellaneous">miscellaneous</SelectItem>: null}
           </SelectContent>
         </Select>
           <br/>
