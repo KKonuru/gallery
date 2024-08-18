@@ -17,5 +17,6 @@ This website is deployed using vercel and can be accessed with any of these urls
 * https://t3gallery-kkonurus-projects.vercel.app/
 * https://t3gallery-git-main-kkonurus-projects.vercel.app/
 * https://t3gallery-roan-two.vercel.app/
-##Aknowledgements
+* 
+## Acknowledgements
 source of the project: https://www.youtube.com/watch?v=d5x0JCZbAJs
