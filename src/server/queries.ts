@@ -66,10 +66,13 @@ export async function getAllUserImages(){
             const userAlbums = await db.query.album.findMany({
                 where: (model, {and, eq }) =>and( eq(model.public,true),eq(model.userId, uId)),
             });
+
             let albumImages: {[key: string]: any} = {};
         
             //From each of the rows extract the value from column albumname
             const albumNames = userAlbums.map((album) => album.albumname);
+            if(albumNames.length===0)
+                continue;
             for(let i=0;i<albumNames.length;i++){
                 let album = albumNames[i];
                 if(album){
@@ -84,8 +87,10 @@ export async function getAllUserImages(){
             if(uploaderInfo.fullName)
                 userImages[uploaderInfo.fullName] = albumImages;
         }
-        return userImages;
+        
     }
+    return userImages;
+
 }
 
 export async function getUserAlbums(){

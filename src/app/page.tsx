@@ -1,7 +1,7 @@
 import Link from "next/link";
 export const dynamic="force-dynamic";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
-import { getMyImages } from "../server/queries";
+import { getAllUserImages, getMyImages } from "../server/queries";
 import Image from "next/image";
 import { image } from "~/server/db/schema";
 import { InferModel } from "drizzle-orm";
@@ -33,8 +33,10 @@ function ImageList({ images }:ImageListProps) {
   );
 }
 
+
 async function Images() {
   const images = await getMyImages();
+  
   // Get all keys from images objects
   const keys: string[] = Object.keys(images);
 
@@ -63,6 +65,43 @@ async function Images() {
     </div>
   );
 }
+
+async function UserImages(){
+  const images = await getAllUserImages();
+  if (!images || Object.keys(images).length === 0) {
+    return <div className="text-center">No images</div>;
+  }
+
+  const userIds = Object.keys(images);
+
+  return (
+    <div className="justify-left px-4">
+      {userIds.map((userId, userIndex) => (
+        <div key={userId} className="py-10">
+          {Object.keys(images[userId]).length > 0 ? (
+            Object.keys(images[userId]).map((albumName, albumIndex) => (
+              <Card key={albumIndex}>
+                <CardHeader>
+                  <CardTitle>
+                    <div className="font-semibold text-2xl">{albumName}</div>
+                  </CardTitle>
+                  <CardDescription>Uploaded By: {userId}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-row gap-4">
+                    <ImageList images={images[userId][albumName]} />
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+            <div className="text-center">No albums for this user</div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
 export default async function HomePage() {
 
   
@@ -81,7 +120,7 @@ export default async function HomePage() {
             <Images/>
           </TabsContent>
           <TabsContent value="user-images">
-            <div className="text-center">User Images</div>
+            <UserImages/>
           </TabsContent>
         </Tabs>
       </SignedIn>
