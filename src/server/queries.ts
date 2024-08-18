@@ -16,7 +16,23 @@ export async function getMyImages(){
         where: (model,{eq}) => eq(model.userId,user.userId),
         orderBy: (model,{desc}) => desc(model.id)
     })
-    return images;
+
+    const userAlbums = await db.query.album.findMany({
+        where: (model, { eq }) => eq(model.userId, user.userId),
+    });
+    const albumImages: {[key: string]: any} = {};
+
+    //From each of the rows extract the value from column albumname
+    const albumNames = userAlbums.map((album) => album.albumname);
+    for(let i=0;i<albumNames.length;i++){
+        let album = albumNames[i];
+        if(album){
+            albumImages[album] = await db.query.image.findMany({
+                where: (model, { and, eq }) => and(eq(model.userId, user.userId), eq(model.albumName, album)),
+            })
+        }
+    }
+    return albumImages;
 }
 
 export async function getImage(id: number){
