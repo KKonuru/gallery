@@ -1,6 +1,6 @@
 import "server-only";
 import {db} from "./db";
-import {auth} from "@clerk/nextjs/server"; 
+import {auth, clerkClient} from "@clerk/nextjs/server"; 
 import { and, eq } from "drizzle-orm";
 import {image} from "./db/schema";
 import { redirect } from "next/navigation";
@@ -10,12 +10,6 @@ export async function getMyImages(){
 
     if(!user.userId)
         throw new Error("Unathorized");
-
-
-    const images = await db.query.image.findMany({
-        where: (model,{eq}) => eq(model.userId,user.userId),
-        orderBy: (model,{desc}) => desc(model.id)
-    })
 
     const userAlbums = await db.query.album.findMany({
         where: (model, { eq }) => eq(model.userId, user.userId),
@@ -55,6 +49,43 @@ export async function deleteImage(id: number){
     await db.delete(image).where(and(eq(image.id,id),eq(image.userId,user.userId)));
     redirect("/");
 
+}
+
+export async function getAllUserImages(){
+    const response = await clerkClient.users.getUserList();
+
+    // Extract the list of user IDs from the response
+    const userIds = response.data.map(user => user.id);
+    //Organize by user id with map of images of album
+    const userImages: {[key: string]: any} = {};
+    for(let i=0;i<userIds.length;i++){
+        const uId = userIds[i];
+        if(uId){
+            const uploaderInfo = await clerkClient.users.getUser(uId);
+            //Gets all albums of the user that is public
+            const userAlbums = await db.query.album.findMany({
+                where: (model, {and, eq }) =>and( eq(model.public,true),eq(model.userId, uId)),
+            });
+            let albumImages: {[key: string]: any} = {};
+        
+            //From each of the rows extract the value from column albumname
+            const albumNames = userAlbums.map((album) => album.albumname);
+            for(let i=0;i<albumNames.length;i++){
+                let album = albumNames[i];
+                if(album){
+                    let imageSet = await db.query.image.findMany({
+                        where: (model, { and, eq }) => and(eq(model.userId, uId), eq(model.albumName, album)),
+                    })
+                    if(imageSet.length>0){
+                        albumImages[album] = imageSet;
+                    }
+                }
+            }
+            if(uploaderInfo.fullName)
+                userImages[uploaderInfo.fullName] = albumImages;
+        }
+        return userImages;
+    }
 }
 
 export async function getUserAlbums(){
