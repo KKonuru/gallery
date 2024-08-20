@@ -3,6 +3,10 @@ To get myself familiar with Next.js, I created a image gallery that allows users
 
 ## Demonstration
 
+
+https://github.com/user-attachments/assets/78d00d2e-dea9-48c9-b48a-a99489c47fd9
+
+
 ## Development
 This app was build using the following technologies
 * Next.js 
